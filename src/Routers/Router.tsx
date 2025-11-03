@@ -19,9 +19,9 @@ import OrderDetailPage from "@/Pages/Dashboard/Order/OrderDetailPage";
 
 // Shared Pages
 import NotificationPage from "@/components/Shared/NotificationPage";
-import SettingsPage from "@/components/Shared/SettingsPage";
-import ProfilePage from "@/Pages/Settings/ProfilePage";
-import ChangePasswordPage from "@/Pages/Settings/ChangePasswordPage";
+import SettingsPage from "@/Pages/Settings/SettingsPage";
+import ProfilePage from "@/components/Settings/ProfilePage";
+import ChangePasswordPage from "@/components/Settings/ChangePasswordPage";
 import CreateOrderPage from "@/Pages/Dashboard/Order/CreateOrderPage";
 import AuthLayout from "@/Layouts/AuthLayout";
 import DashboardRedirect from "@/components/DashboardRedirect";
@@ -49,6 +49,8 @@ import PurchaseReportPage from "@/Pages/Dashboard/Admin/Reports/PurchaseReportPa
 import TopSellingItemsPage from "@/Pages/Dashboard/Admin/Reports/TopSellingItemsPage";
 import SupplierPage from "@/Pages/Dashboard/Admin/Supplier/SupplierPage";
 import SupplierReportPage from "@/Pages/Dashboard/Admin/Reports/SupplierReportPage";
+import StockPage from "@/Pages/Dashboard/Admin/Stock/StockPage";
+import DayManagementPage from "@/components/Settings/DayManagementPage";
 
 const router = createBrowserRouter([
   {
@@ -104,6 +106,7 @@ const router = createBrowserRouter([
         path: "table",
         element: <TablePage />,
       },
+      // Food Management Routes
       {
         path: "category",
         element: <CategoryPage />,
@@ -112,6 +115,11 @@ const router = createBrowserRouter([
         path: "ingredients",
         element: <IngredientsPage />,
       },
+      {
+        path: "stock",
+        element: <StockPage />,
+      },
+      // User and Role Management Routes
       {
         path: "user",
         element: <UserPage />,
@@ -242,6 +250,10 @@ const router = createBrowserRouter([
       {
         path: "settings/change-password",
         element: <ChangePasswordPage />,
+      },
+      {
+        path: "settings/day-management",
+        element: <DayManagementPage />,
       },
     ],
   },

@@ -18,11 +18,15 @@ import {
   CreditCard,
   BarChart3,
   Users2,
+  DatabaseZap,
 } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { HugeiconsIcon } from "@hugeicons/react";
-import { AnalyticsUpIcon, RestaurantTableIcon } from "@hugeicons/core-free-icons";
+import {
+  AnalyticsUpIcon,
+  RestaurantTableIcon,
+} from "@hugeicons/core-free-icons";
 
 export interface SidebarItem {
   id: string;
@@ -99,6 +103,13 @@ export const sidebarConfig: Record<string, SidebarSection[]> = {
           label: "Ingredients",
           icon: <Soup className="h-5 w-5" />,
           path: "/dashboard/ingredients",
+          roles: ["admin"],
+        },
+        {
+          id: "stock",
+          label: "Stock",
+          icon: <DatabaseZap className="h-5 w-5" />,
+          path: "/dashboard/stock",
           roles: ["admin"],
         },
       ],
@@ -232,7 +243,7 @@ export const sidebarConfig: Record<string, SidebarSection[]> = {
         },
         {
           id: "staff",
-          label: "Staff",
+          label: "User",
           icon: <Users className="h-5 w-5" />,
           path: "/dashboard/staff",
           roles: ["manager"],

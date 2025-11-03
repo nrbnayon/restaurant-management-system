@@ -1,9 +1,11 @@
 // src/components/Dashboard/Sidebar.tsx
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { LogOut, X } from "lucide-react";
 import { getSidebarForRole } from "@/config/sidebarConfig";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
+import LogoutConfirmModal from "@/components/Modals/LogoutConfirmModal";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -13,6 +15,7 @@ interface SidebarProps {
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { user, logout } = useAuth();
   const location = useLocation();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   if (!user) return null;
 
@@ -23,6 +26,15 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     if (window.innerWidth < 768) {
       onClose();
     }
+  };
+
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true);
+  };
+
+  const handleConfirmLogout = () => {
+    setShowLogoutModal(false);
+    logout();
   };
 
   return (
@@ -50,7 +62,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               alt="Foodie Logo"
               className="w-20 h-16 object-contain"
             />
-            <p className="font-semibold text-xl">JVAI</p>
+            {/* <p className="font-semibold text-xl">JVAI</p> */}
           </div>
           {/* Close button for mobile */}
           <button
@@ -109,7 +121,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         {/* Logout Button */}
         <div className="p-4 border-t border-border">
           <button
-            onClick={logout}
+            onClick={handleLogoutClick}
             className="flex items-center gap-3 px-3 py-2.5 w-full rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors"
           >
             <LogOut className="h-5 w-5 shrink-0" />
@@ -117,6 +129,13 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           </button>
         </div>
       </aside>
+
+      {/* Logout Confirmation Modal */}
+      <LogoutConfirmModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleConfirmLogout}
+      />
     </>
   );
 }

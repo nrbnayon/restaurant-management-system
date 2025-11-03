@@ -117,7 +117,7 @@ export function Pagination({
   if (totalPages <= 1 && !showIfSinglePage) return null;
 
   return (
-    <div className={`flex items-center justify-between ${className}`}>
+    <div className={`flex items-center justify-end gap-4 ${className}`}>
       {showPrevNext && (
         <Button
           variant="outline"

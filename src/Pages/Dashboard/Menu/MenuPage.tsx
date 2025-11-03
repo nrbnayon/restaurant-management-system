@@ -69,7 +69,12 @@ export default function MenuPage() {
     return category?.subCategories || [];
   }, [categoryFilter]);
 
-  // Unified toggle: always open modal for confirmation (activate or deactivate)
+  // Reset sub-category when category changes
+  const handleCategoryChange = (value: string) => {
+    setCategoryFilter(value);
+    setSubCategoryFilter("all");
+  };
+
   const handleStatusToggle = (item: MenuItem) => {
     setSelectedItem(item);
     setIsDeactivateModalOpen(true);
@@ -86,7 +91,6 @@ export default function MenuPage() {
       )
     );
 
-    // Show correct toast based on final state
     if (willBeActive) {
       toast.success("Menu item activated successfully", {
         description: `${selectedItem.name} is now active`,
@@ -97,7 +101,6 @@ export default function MenuPage() {
       });
     }
 
-    // Close modal
     setIsDeactivateModalOpen(false);
     setSelectedItem(null);
   };
@@ -108,7 +111,7 @@ export default function MenuPage() {
 
       <main className="p-3 md:p-8 space-y-3 md:space-y-6">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           <StatCard
             title="Total Menu"
             value={stats.totalMenu.toString()}
@@ -127,86 +130,98 @@ export default function MenuPage() {
         </div>
 
         {/* Menu Section */}
-        <div className="bg-card rounded-2xl border border-border shadow-sm p-5 space-y-5">
+        <div className="bg-card rounded-2xl border border-border shadow-sm p-4 md:p-5 space-y-4 md:space-y-5">
           {/* Header */}
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-semibold text-foreground">Menu</h2>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <h2 className="text-xl md:text-2xl font-semibold text-foreground">
+              Menu
+            </h2>
             <RoleGuard allowedRole="admin">
               <Link
                 to="/dashboard/menu/add"
-                className="flex items-center justify-center gap-1 bg-primary hover:bg-primary/80 shadow-lg hover:shadow-xl rounded-md px-4 py-2.5 text-white transition-all"
+                className="flex items-center justify-center gap-1 bg-primary hover:bg-primary/80 shadow-lg hover:shadow-xl rounded-md px-4 py-2.5 text-white transition-all text-sm md:text-base w-full sm:w-auto"
               >
-                <Plus className="w-5 h-5" />
+                <Plus className="w-4 h-4 md:w-5 md:h-5" />
                 Add Menu
               </Link>
             </RoleGuard>
           </div>
 
-          {/* Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="h-12 bg-background">
-                <SelectValue placeholder="Select your Category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                {mockCategories.map((cat) => (
-                  <SelectItem key={cat.id} value={cat.name}>
-                    {cat.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select
-              value={subCategoryFilter}
-              onValueChange={setSubCategoryFilter}
-              disabled={categoryFilter === "all"}
-            >
-              <SelectTrigger className="h-12 bg-background">
-                <SelectValue placeholder="Select your Sub-Category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Sub-Categories</SelectItem>
-                {subCategories.map((sub) => (
-                  <SelectItem key={sub.id} value={sub.name}>
-                    {sub.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
           {/* Search and Filter */}
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-3 md:gap-4">
+            {/* Search Bar */}
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-muted-foreground" />
               <Input
                 type="text"
                 placeholder="Search Menu"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-12 bg-background"
+                className="pl-9 md:pl-10 h-10 md:h-12 bg-card text-sm md:text-base"
               />
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="h-12! border-input">
-                <SlidersHorizontal className="h-5 w-5" />
-                <SelectValue placeholder="Filter" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="inactive">Deactivate</SelectItem>
-              </SelectContent>
-            </Select>
+
+            {/* Filters - Horizontal on desktop, stacked on mobile */}
+            <div className="flex flex-col sm:flex-row items-stretch gap-3 md:gap-4">
+              {/* Category Filter */}
+              <Select
+                value={categoryFilter}
+                onValueChange={handleCategoryChange}
+              >
+                <SelectTrigger className="h-10 md:h-12! bg-card text-sm md:text-base w-full sm:w-auto sm:min-w-[180px]">
+                  <SelectValue placeholder="Select your Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {mockCategories.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.name}>
+                      {cat.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* Sub-Category Filter */}
+              <Select
+                value={subCategoryFilter}
+                onValueChange={setSubCategoryFilter}
+                disabled={categoryFilter === "all"}
+              >
+                <SelectTrigger className="h-10 md:h-12! bg-card text-sm md:text-base w-full sm:w-auto sm:min-w-[200px]">
+                  <SelectValue placeholder="Select your Sub-Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Sub-Categories</SelectItem>
+                  {subCategories.map((sub) => (
+                    <SelectItem key={sub.id} value={sub.name}>
+                      {sub.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* Status Filter */}
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="h-10 md:h-12! border-input text-sm md:text-base w-full sm:w-auto sm:min-w-[120px]">
+                  <SlidersHorizontal className="h-4 w-4 md:h-5 md:w-5" />
+                  <SelectValue placeholder="Filter" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Deactivate</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Menu Items Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
             {filteredMenuItems.length === 0 ? (
-              <div className="col-span-full text-center py-12">
-                <p className="text-muted-foreground">No menu items found</p>
+              <div className="col-span-full text-center py-8 md:py-12">
+                <p className="text-muted-foreground text-sm md:text-base">
+                  No menu items found
+                </p>
               </div>
             ) : (
               filteredMenuItems.map((item) => (

@@ -1,4 +1,4 @@
-// src/Pages/Dashboard/Shared/ChangePasswordPage.tsx
+// src\components\Settings\ChangePasswordPage.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";

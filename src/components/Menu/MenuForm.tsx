@@ -49,17 +49,22 @@ export default function MenuForm({
   );
   const [isHovering, setIsHovering] = useState(false);
   const [autoRotation, setAutoRotation] = useState({ x: 0, y: 0 });
-  const [hasVariants, setHasVariants] = useState(false);
-  const [variants, setVariants] = useState<Variant[]>([
-    {
+  const [hasVariants, setHasVariants] = useState(true);
+
+  // Initialize with a default variant that includes the first ingredient
+  const getDefaultVariant = (): Variant => {
+    const firstIngredient = mockIngredients[0];
+    return {
       id: "variant-1",
       name: "",
       cost: 0,
       price: 0,
       discount: 0,
-      ingredients: [],
-    },
-  ]);
+      ingredients: firstIngredient ? [{ ...firstIngredient }] : [],
+    };
+  };
+
+  const [variants, setVariants] = useState<Variant[]>([getDefaultVariant()]);
   const [extraIngredients, setExtraIngredients] = useState<ExtraIngredient[]>(
     initialData.extraIngredients || []
   );
@@ -74,7 +79,13 @@ export default function MenuForm({
     mockCategories.find((cat) => cat.name === formData.category)
       ?.subCategories || [];
 
-  // Automatic 3D rotation effect
+  // Initialize variants from initialData
+  useEffect(() => {
+    if (initialData.variants && initialData.variants.length > 0) {
+      setVariants(initialData.variants);
+    }
+  }, [initialData.variants]);
+
   // Automatic 3D rotation effect
   useEffect(() => {
     if (!airViewPreview || isHovering) return;
@@ -854,13 +865,15 @@ export default function MenuForm({
       </div>
 
       {/* Submit Button */}
-      <Button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full bg-primary hover:bg-primary/80 h-12 text-base font-semibold"
-      >
-        {isSubmitting ? "Saving..." : submitButtonText}
-      </Button>
+      <div className="pt-4 border-t border-border text-end">
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className=" bg-primary hover:bg-primary/80 h-12 text-base font-semibold"
+        >
+          {isSubmitting ? "Saving..." : submitButtonText}
+        </Button>
+      </div>
     </form>
   );
 }

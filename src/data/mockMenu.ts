@@ -1,9 +1,6 @@
-// ============================================
+
 // MOCK DATA - src/data/mockMenu.ts
-
 import type { Category, MenuItem } from "@/types/menu";
-
-// ============================================
 export const mockCategories: Category[] = [
   {
     id: "cat-1",

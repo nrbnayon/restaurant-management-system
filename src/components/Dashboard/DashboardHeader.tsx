@@ -1,5 +1,6 @@
 // src/components/Dashboard/DashboardHeader.tsx
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface DashboardHeaderProps {
@@ -12,6 +13,7 @@ export default function DashboardHeader({
   subtitle,
 }: DashboardHeaderProps) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [imageError, setImageError] = useState(false);
 
   // Map role to display name
@@ -55,13 +57,12 @@ export default function DashboardHeader({
   const profileImage = getProfileImage();
   const showFallback = !profileImage || imageError;
 
+  // Navigate to profile page
+  const handleProfileClick = () => {
+    navigate("/dashboard/settings/profile");
+  };
+
   return (
-    // <header
-    //   className="h-20 bg-card border-b border-border flex items-center justify-between px-5 mt-5 md:mt-10 mx-2 md:mx-8 rounded-md"
-    //   style={{
-    //     boxShadow: "0px 8px 32px 0px #00000026",
-    //   }}
-    // >
     <header className="h-20 bg-card border-b border-border flex items-center justify-between px-8 sticky top-0 z-50">
       {/* Page Title */}
       <div className="">
@@ -73,8 +74,11 @@ export default function DashboardHeader({
         )}
       </div>
 
-      {/* User Info */}
-      <div className="flex items-center gap-3">
+      {/* User Info - Clickable */}
+      <div
+        onClick={handleProfileClick}
+        className="flex items-center gap-3 cursor-pointer hover:bg-accent/50 rounded-lg px-3 py-2 transition-colors"
+      >
         {/* Avatar */}
         <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0 shadow-md">
           {showFallback ? (

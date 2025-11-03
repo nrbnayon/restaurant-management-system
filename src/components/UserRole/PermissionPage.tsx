@@ -200,12 +200,12 @@ export default function PermissionPage() {
           </div>
 
           <div className="p-6 border-t border-border w-full flex justify-end items-center bg-background">
-            <button
+            <Button
               onClick={handleSave}
-              className="w-full md:w-auto px-8 h-12 rounded-md bg-primary hover:bg-primary/80"
+              className="w-full md:w-auto px-8 h-12 rounded-md bg-primary hover:bg-primary/80 text-white"
             >
               Save Permissions
-            </button>
+            </Button>
           </div>
         </div>
       </div>

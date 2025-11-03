@@ -6,8 +6,8 @@ export default function StaffPage() {
   return (
     <>
       <DashboardHeader
-        title="Staff Management"
-        subtitle="Manage Your Restaurant Staff"
+        title="User Management"
+        subtitle="Manage Your Restaurant User"
       />
       <UserManagementPage />
     </>

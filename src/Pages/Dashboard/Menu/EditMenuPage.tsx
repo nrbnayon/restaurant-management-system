@@ -1,5 +1,4 @@
 // EDIT MENU PAGE - src/Pages/Dashboard/Menu/EditMenuPage.tsx
-// ============================================
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
@@ -25,7 +24,34 @@ export default function EditMenuPage() {
       const foundItem = mockMenuItems.find((item) => item.id === id);
 
       if (foundItem) {
-        setMenuItem(foundItem);
+        // Transform the data to match MenuForm's expected structure
+        const transformedItem = {
+          ...foundItem,
+          variants: foundItem.sizes?.map((size, index) => ({
+            id: size.id || `variant-${index}`,
+            name: size.size,
+            cost: size.regularPrice,
+            price: size.offerPrice,
+            discount: parseFloat(
+              (
+                ((size.regularPrice - size.offerPrice) / size.regularPrice) *
+                100
+              ).toFixed(0)
+            ),
+            ingredients: foundItem.ingredients || [],
+          })) || [
+            {
+              id: "variant-1",
+              name: "",
+              cost: 0,
+              price: 0,
+              discount: 0,
+              ingredients: foundItem.ingredients || [],
+            },
+          ],
+        };
+
+        setMenuItem(transformedItem as MenuItem);
       } else {
         toast.error("Menu item not found");
         navigate("/dashboard/menu");

@@ -435,7 +435,7 @@ export default function OverallExpenseReportPage() {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="pl-10 h-12 bg-card"
+                className="pl-9 md:pl-10 h-10 md:h-12 bg-card text-sm md:text-base"
               />
             </div>
 

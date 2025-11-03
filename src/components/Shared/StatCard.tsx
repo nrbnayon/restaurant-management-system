@@ -22,15 +22,7 @@ export default function StatCard({
   const showImage = image && !imageError;
 
   return (
-    <div
-      className="bg-card rounded-2xl p-5 shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out cursor-pointer"
-      onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = "0px 12px 48px 0px #00000040";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow = "0px 8px 32px 0px #00000026";
-      }}
-    >
+    <div className="bg-card rounded-2xl p-5 shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out cursor-pointer">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <h3 className="text-base md:text-lg font-medium text-dark dark:text-foreground">

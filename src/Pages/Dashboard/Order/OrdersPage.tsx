@@ -141,7 +141,7 @@ export default function OrdersPage({
             <h2 className="text-2xl font-semibold text-foreground">Orders</h2>
             <RoleGuard allowedRole="manager">
               <Link
-                to={`${basePath}/create`}
+                to="/dashboard/order/create"
                 className="flex items-center justify-center gap-1 bg-primary hover:bg-primary/80 shadow-lg hover:shadow-xl rounded-md px-3 py-2 text-white"
               >
                 <Plus className="w-5 h-5" />
@@ -161,7 +161,7 @@ export default function OrdersPage({
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="pl-10 h-12 bg-background"
+                className="pl-9 md:pl-10 h-10 md:h-12 bg-card text-sm md:text-base"
               />
             </div>
             <Select

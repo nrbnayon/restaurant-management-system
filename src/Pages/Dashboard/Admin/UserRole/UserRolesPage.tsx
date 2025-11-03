@@ -100,13 +100,13 @@ export default function UserRolesPage() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder="Search Staff"
+                placeholder="Search user"
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="pl-10 h-12 bg-background"
+                className="pl-9 md:pl-10 h-10 md:h-12 bg-card text-sm md:text-base"
               />
             </div>
             <Button

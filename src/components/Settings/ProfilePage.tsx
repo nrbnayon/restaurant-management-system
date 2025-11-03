@@ -1,4 +1,4 @@
-// src/Pages/Dashboard/Shared/ProfilePage.tsx
+// src\components\Settings\ProfilePage.tsx
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -159,7 +159,7 @@ export default function ProfilePage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Side - Profile Card */}
           <div className="lg:col-span-1">
-            <div className="bg-card rounded-md shadow-lg p-4 md:p-8">
+            <div className="bg-card rounded-md shadow-sm p-4 md:p-8">
               <div className="flex flex-col items-center text-center space-y-4">
                 {/* Avatar */}
                 <div className="relative">
@@ -179,7 +179,7 @@ export default function ProfilePage() {
                   {isEditing && (
                     <button
                       onClick={handleImageClick}
-                      className="absolute bottom-0 right-0 w-10 h-10 bg-primary rounded-full flex items-center justify-center hover:bg-primary/80 transition-colors shadow-lg"
+                      className="absolute bottom-0 right-0 w-10 h-10 bg-primary rounded-full flex items-center justify-center hover:bg-primary/80 transition-colors shadow-sm"
                     >
                       <Camera className="w-5 h-5 text-white" />
                     </button>
@@ -206,7 +206,7 @@ export default function ProfilePage() {
 
           {/* Right Side - Form */}
           <div className="lg:col-span-2">
-            <div className="bg-card rounded-md shadow-lg p-4 md:p-8 space-y-3 md:space-y-6">
+            <div className="bg-card rounded-md shadow-sm p-4 md:p-8 space-y-3 md:space-y-6">
               {/* Name */}
               <div>
                 <Label className="text-sm font-medium text-foreground mb-2">
@@ -216,7 +216,7 @@ export default function ProfilePage() {
                   value={profile.name}
                   onChange={(e) => handleInputChange("name", e.target.value)}
                   readOnly={!isEditing}
-                  className="bg-background border-input mt-2"
+                  className="bg-card border-input mt-2"
                 />
               </div>
 
@@ -230,7 +230,7 @@ export default function ProfilePage() {
                   value={profile.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   readOnly={!isEditing}
-                  className="bg-background border-input mt-2"
+                  className="bg-card border-input mt-2"
                 />
               </div>
 
@@ -247,7 +247,7 @@ export default function ProfilePage() {
                         handleInputChange("countryCode", e.target.value)
                       }
                       readOnly={!isEditing}
-                      className="bg-background border-input"
+                      className="bg-card border-input"
                       placeholder="+96"
                     />
                   </div>
@@ -256,7 +256,7 @@ export default function ProfilePage() {
                     value={profile.phone}
                     onChange={(e) => handleInputChange("phone", e.target.value)}
                     readOnly={!isEditing}
-                    className="flex-1 bg-background border-input"
+                    className="flex-1 bg-card border-input"
                     placeholder="24864126544"
                   />
                 </div>
