@@ -105,7 +105,7 @@ export default function PurchasePage() {
 
       <main className="p-3 md:p-8 space-y-3 md:space-y-6">
         {/* Recent Purchase Section */}
-        <div className="bg-card rounded-2xl border border-border shadow-[0px_8px_32px_0px_#00000026] pb-5">
+        <div className="bg-card rounded-2xl border border-border shadow-sm pb-5">
           <div className="p-5 border-b border-border flex justify-between items-center">
             <h2 className="text-2xl font-semibold text-foreground">
               Recent Purchase
@@ -254,7 +254,7 @@ export default function PurchasePage() {
         )}
 
         {/* Recent by Type Section */}
-        <div className="bg-card rounded-2xl border border-border shadow-[0px_8px_32px_0px_#00000026] p-6">
+        <div className="bg-card rounded-2xl border border-border shadow-sm p-6">
           <h2 className="text-2xl font-semibold text-foreground mb-6">
             Recent by Type
           </h2>

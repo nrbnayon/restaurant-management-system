@@ -23,10 +23,7 @@ export default function StatCard({
 
   return (
     <div
-      className="bg-card rounded-2xl p-5 hover:shadow-lg transition-shadow"
-      style={{
-        boxShadow: "0px 8px 32px 0px #00000026",
-      }}
+      className="bg-card rounded-2xl p-5 shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out cursor-pointer"
       onMouseEnter={(e) => {
         e.currentTarget.style.boxShadow = "0px 12px 48px 0px #00000040";
       }}

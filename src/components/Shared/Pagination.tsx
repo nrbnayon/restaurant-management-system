@@ -121,7 +121,7 @@ export function Pagination({
       {showPrevNext && (
         <Button
           variant="outline"
-          className="rounded-md bg-card shadow-[0px_8px_32px_0px_#00000026]"
+          className="rounded-md bg-card shadow-sm"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
@@ -134,7 +134,7 @@ export function Pagination({
       {showPrevNext && (
         <Button
           variant="outline"
-          className="rounded-md bg-card shadow-[0px_8px_32px_0px_#00000026]"
+          className="rounded-md bg-card shadow-sm"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
         >

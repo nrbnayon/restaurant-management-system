@@ -127,7 +127,7 @@ export default function MenuPage() {
         </div>
 
         {/* Menu Section */}
-        <div className="bg-card rounded-2xl border border-border shadow-[0px_8px_32px_0px_#00000026] p-5 space-y-5">
+        <div className="bg-card rounded-2xl border border-border shadow-sm p-5 space-y-5">
           {/* Header */}
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-semibold text-foreground">Menu</h2>

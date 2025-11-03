@@ -568,7 +568,7 @@ export default function CategoryPage() {
             <div className="flex items-center justify-between">
               <Button
                 variant="outline"
-                className="rounded-md bg-card shadow-[0px_8px_32px_0px_#00000026]"
+                className="rounded-md bg-card shadow-sm"
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
               >
@@ -579,7 +579,7 @@ export default function CategoryPage() {
               </div>
               <Button
                 variant="outline"
-                className="rounded-md bg-card shadow-[0px_8px_32px_0px_#00000026]"
+                className="rounded-md bg-card shadow-sm"
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
               >

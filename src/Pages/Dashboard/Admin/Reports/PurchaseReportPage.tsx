@@ -416,7 +416,7 @@ export default function PurchaseReportPage() {
           />
         </div>
 
-        <div className="bg-card rounded-2xl border border-border shadow-[0px_8px_32px_0px_#00000026] pb-5">
+        <div className="bg-card rounded-2xl border border-border shadow-sm pb-5">
           <div className="p-5 border-b border-border flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <h2 className="text-2xl font-semibold text-foreground">
               Purchase Report
