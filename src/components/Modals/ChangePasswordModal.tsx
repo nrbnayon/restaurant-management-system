@@ -1,13 +1,13 @@
-// src\components\Settings\ChangePasswordPage.tsx
+// src/components/Modals/ChangePasswordModal.tsx
+
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { X, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
 // Validation schema
@@ -37,8 +37,15 @@ const changePasswordSchema = z
 
 type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
 
-export default function ChangePasswordPage() {
-  const navigate = useNavigate();
+interface ChangePasswordModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function ChangePasswordModal({
+  isOpen,
+  onClose,
+}: ChangePasswordModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -70,9 +77,9 @@ export default function ChangePasswordPage() {
       // Reset form
       reset();
 
-      // Navigate back to settings
+      // Close modal after success
       setTimeout(() => {
-        navigate("/dashboard/settings");
+        onClose();
       }, 1000);
     } catch (error) {
       console.error("Error changing password:", error);
@@ -84,25 +91,31 @@ export default function ChangePasswordPage() {
     }
   };
 
-  return (
-    <main className="p-3 md:p-8 flex items-center justify-center bg-[#00000080] min-h-[calc(100vh-0rem)]">
-      <div className="w-full max-w-lg">
-        <div className="bg-card rounded-2xl border border-border shadow-lg p-4 md:p-8">
-          {/* Header */}
-          <div className="flex items-center gap-3 mb-6">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate("/dashboard/settings")}
-              className="hover:bg-accent"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <h2 className="text-2xl font-medium text-foreground">
-              Change Password
-            </h2>
-          </div>
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
 
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div className="bg-card rounded-2xl shadow-2xl w-full max-w-lg mx-4 border border-border animate-in fade-in zoom-in duration-200 max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 pb-4 border-b border-border sticky top-0 bg-card z-10">
+          <h2 className="text-xl font-semibold text-foreground">
+            Change Password
+          </h2>
+          <button
+            onClick={handleClose}
+            className="hover:bg-accent rounded-full p-1.5 transition-colors"
+          >
+            <X className="h-5 w-5 text-muted-foreground" />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-6">
           {/* Info Text */}
           <p className="text-sm text-muted-foreground mb-6">
             Your password must be 8-10 character long.
@@ -118,9 +131,9 @@ export default function ChangePasswordPage() {
               <div className="relative mt-2">
                 <Input
                   type={showCurrentPassword ? "text" : "password"}
-                  placeholder="Set new password"
+                  placeholder="Enter current password"
                   {...register("currentPassword")}
-                  className="pr-12 bg-background border-input"
+                  className="pr-12 bg-card border-input h-11"
                 />
                 <Button
                   type="button"
@@ -154,7 +167,7 @@ export default function ChangePasswordPage() {
                   type={showNewPassword ? "text" : "password"}
                   placeholder="Set new password"
                   {...register("newPassword")}
-                  className="pr-12 bg-background border-input"
+                  className="pr-12 bg-card border-input h-11"
                 />
                 <Button
                   type="button"
@@ -188,7 +201,7 @@ export default function ChangePasswordPage() {
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Re-enter new password"
                   {...register("confirmPassword")}
-                  className="pr-12 bg-background border-input"
+                  className="pr-12 bg-card border-input h-11"
                 />
                 <Button
                   type="button"
@@ -223,6 +236,6 @@ export default function ChangePasswordPage() {
           </form>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

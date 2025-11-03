@@ -110,7 +110,7 @@ export default function AddSubCategoryModal({
               value={formData.categoryId}
               onValueChange={handleCategoryChange}
             >
-              <SelectTrigger className="h-12 bg-background">
+              <SelectTrigger className="h-12! bg-card">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
@@ -132,7 +132,7 @@ export default function AddSubCategoryModal({
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
-                className="h-12 bg-background"
+                className="h-12 bg-card"
                 placeholder="e.g., Pizza"
                 required
               />
@@ -146,7 +146,7 @@ export default function AddSubCategoryModal({
                 type="text"
                 value={formData.number}
                 onChange={(e) => handleInputChange("number", e.target.value)}
-                className="h-12 bg-background"
+                className="h-12 bg-card"
                 placeholder="e.g., 001"
                 required
               />

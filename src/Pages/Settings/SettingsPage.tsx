@@ -1,10 +1,11 @@
-// src\Pages\Settings\SettingsPage.tsx
+// src/Pages/Settings/SettingsPage.tsx
 import { useState, useEffect } from "react";
 import DashboardHeader from "@/components/Dashboard/DashboardHeader";
 import { RoleGuard } from "@/components/RoleGuard";
 import { ChevronRight, Circle } from "lucide-react";
 import { Link } from "react-router-dom";
 import DayManagementModal from "@/components/Modals/DayManagementModal";
+import ChangePasswordModal from "@/components/Modals/ChangePasswordModal";
 
 interface DayStatus {
   isOpen: boolean;
@@ -16,6 +17,7 @@ interface DayStatus {
 
 export default function SettingsPage() {
   const [showDayManagementModal, setShowDayManagementModal] = useState(false);
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const [dayStatus, setDayStatus] = useState<DayStatus | null>(null);
 
   // Get user name from localStorage
@@ -119,14 +121,15 @@ export default function SettingsPage() {
 
         <div>
           {/* Change Password */}
-          <Link to="/dashboard/settings/change-password">
-            <div className="bg-card flex justify-between items-center rounded-md shadow-md p-3 hover:shadow-xl transition-all border border-border cursor-pointer">
-              <span className="text-lg font-medium text-foreground">
-                Change Password
-              </span>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
-            </div>
-          </Link>
+          <div
+            onClick={() => setShowChangePasswordModal(true)}
+            className="bg-card flex justify-between items-center rounded-md shadow-md p-3 hover:shadow-xl transition-all border border-border cursor-pointer"
+          >
+            <span className="text-lg font-medium text-foreground">
+              Change Password
+            </span>
+            <ChevronRight className="w-5 h-5 text-muted-foreground" />
+          </div>
         </div>
       </main>
 
@@ -136,6 +139,14 @@ export default function SettingsPage() {
           isOpen={showDayManagementModal}
           onClose={() => setShowDayManagementModal(false)}
           onStatusUpdate={handleDayStatusUpdate}
+        />
+      )}
+
+      {/* Change Password Modal */}
+      {showChangePasswordModal && (
+        <ChangePasswordModal
+          isOpen={showChangePasswordModal}
+          onClose={() => setShowChangePasswordModal(false)}
         />
       )}
     </>

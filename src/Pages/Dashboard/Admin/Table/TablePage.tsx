@@ -188,7 +188,7 @@ export default function TablePage() {
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="h-12 border-input">
+              <SelectTrigger className="h-12! border-input">
                 <SlidersHorizontal className="h-5 w-5" />
                 <SelectValue placeholder="Filter" />
               </SelectTrigger>

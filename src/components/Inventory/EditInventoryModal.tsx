@@ -94,7 +94,7 @@ export default function EditInventoryModal({
               type="text"
               value={formData.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
-              className="h-12 bg-background"
+              className="h-12 bg-card"
               placeholder={`Enter ${title.toLowerCase()} name`}
               required
             />
@@ -111,7 +111,7 @@ export default function EditInventoryModal({
                 onChange={(e) =>
                   handleInputChange("sufficient", e.target.value)
                 }
-                className="h-12 bg-background"
+                className="h-12 bg-card"
                 placeholder="e.g., 100 kg"
                 required
               />
@@ -123,7 +123,7 @@ export default function EditInventoryModal({
                 type="text"
                 value={formData.low}
                 onChange={(e) => handleInputChange("low", e.target.value)}
-                className="h-12 bg-background"
+                className="h-12 bg-card"
                 placeholder="e.g., 10 kg"
                 required
               />
@@ -139,7 +139,7 @@ export default function EditInventoryModal({
                 onChange={(e) =>
                   handleInputChange("outOfStock", e.target.value)
                 }
-                className="h-12 bg-background"
+                className="h-12 bg-card"
                 placeholder="e.g., 0 kg"
                 required
               />

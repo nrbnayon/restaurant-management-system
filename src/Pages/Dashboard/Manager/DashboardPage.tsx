@@ -16,7 +16,7 @@ import processIcon from "@/assets/icons/process.svg";
 import deliverIcon from "@/assets/icons/deliver.svg";
 import { getStatusColor } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
-import { UserRoleDisplay } from "@/components/UserRoleDisplay";
+// import { UserRoleDisplay } from "@/components/UserRoleDisplay";
 import { topItems } from "@/data/mockTopItem";
 import { chartData, mockOrders } from "@/data/mockOrders";
 import CustomAreaChart from "@/components/Charts/AreaChart";
@@ -36,7 +36,7 @@ export default function DashboardPage() {
 
       <main className="p-3 md:p-8 space-y-3 md:space-y-6">
         {/* Role-based Demo */}
-        <UserRoleDisplay />
+        {/* <UserRoleDisplay /> */}
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

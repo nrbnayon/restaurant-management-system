@@ -144,7 +144,7 @@ export default function AddCategoryModal({
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
-                className="h-12 bg-background"
+                className="h-12 bg-card"
                 placeholder="e.g., Main Course"
                 required
               />
@@ -158,7 +158,7 @@ export default function AddCategoryModal({
                 type="text"
                 value={formData.number}
                 onChange={(e) => handleInputChange("number", e.target.value)}
-                className="h-12 bg-background"
+                className="h-12 bg-card"
                 placeholder="e.g., 001"
                 required
               />

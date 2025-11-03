@@ -253,10 +253,10 @@ export default function PurchasePage() {
           />
         )}
 
-        {/* Recent by Type Section */}
+        {/* Recent by Purchase Section */}
         <div className="bg-card rounded-2xl border border-border shadow-sm p-6">
           <h2 className="text-2xl font-semibold text-foreground mb-6">
-            Recent by Type
+            Recent by Purchase
           </h2>
           <div className="space-y-4">
             {mockPurchaseStats.map((stat) => (

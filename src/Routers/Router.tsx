@@ -21,7 +21,6 @@ import OrderDetailPage from "@/Pages/Dashboard/Order/OrderDetailPage";
 import NotificationPage from "@/components/Shared/NotificationPage";
 import SettingsPage from "@/Pages/Settings/SettingsPage";
 import ProfilePage from "@/components/Settings/ProfilePage";
-import ChangePasswordPage from "@/components/Settings/ChangePasswordPage";
 import CreateOrderPage from "@/Pages/Dashboard/Order/CreateOrderPage";
 import AuthLayout from "@/Layouts/AuthLayout";
 import DashboardRedirect from "@/components/DashboardRedirect";
@@ -50,7 +49,6 @@ import TopSellingItemsPage from "@/Pages/Dashboard/Admin/Reports/TopSellingItems
 import SupplierPage from "@/Pages/Dashboard/Admin/Supplier/SupplierPage";
 import SupplierReportPage from "@/Pages/Dashboard/Admin/Reports/SupplierReportPage";
 import StockPage from "@/Pages/Dashboard/Admin/Stock/StockPage";
-import DayManagementPage from "@/components/Settings/DayManagementPage";
 
 const router = createBrowserRouter([
   {
@@ -246,14 +244,6 @@ const router = createBrowserRouter([
       {
         path: "settings/profile",
         element: <ProfilePage />,
-      },
-      {
-        path: "settings/change-password",
-        element: <ChangePasswordPage />,
-      },
-      {
-        path: "settings/day-management",
-        element: <DayManagementPage />,
       },
     ],
   },

@@ -56,7 +56,7 @@ export default function NotificationPage() {
           {mockNotifications.map((notification) => (
             <div
               key={notification.id}
-              className="bg-card rounded-2xl p-3 shadow-lg hover:shadow-md transition-all cursor-pointer flex items-center gap-4"
+              className="bg-card rounded-2xl p-3 shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center gap-4"
             >
               {/* Notification Image */}
               <div className="w-16 h-16 rounded-md overflow-hidden shrink-0 bg-linear-to-br from-primary to-orange-600">

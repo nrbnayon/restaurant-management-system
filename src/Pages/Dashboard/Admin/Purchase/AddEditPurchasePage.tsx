@@ -1,7 +1,13 @@
 // src/Pages/Dashboard/Purchase/AddEditPurchasePage.tsx
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Plus, Trash2, Printer } from "lucide-react";
+import {
+  ArrowLeft,
+  Trash2,
+  Printer,
+  ChevronsUpDown,
+  Check,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,6 +27,20 @@ import {
 } from "@/data/mockPurchases";
 import type { PurchaseItem } from "@/types/purchase";
 import { RoleGuard } from "@/components/RoleGuard";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { cn } from "@/lib/utils";
 
 export default function AddEditPurchasePage() {
   const navigate = useNavigate();
@@ -44,6 +64,7 @@ export default function AddEditPurchasePage() {
   const [vat, setVat] = useState("0");
   const [discount, setDiscount] = useState("0");
   const [paidAmount, setPaidAmount] = useState("0");
+  const [supplierOpen, setSupplierOpen] = useState(false);
 
   // Validation errors
   const [errors, setErrors] = useState<{
@@ -446,13 +467,6 @@ export default function AddEditPurchasePage() {
           <div className="bg-card rounded-2xl border border-border shadow-sm p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold text-foreground">Items</h2>
-              <Button
-                onClick={handleAddItem}
-                className="flex items-center gap-1 bg-primary hover:bg-primary/80 rounded-md px-4 py-2 text-white"
-              >
-                <Plus className="w-4 h-4" />
-                Add Item
-              </Button>
             </div>
 
             {/* Add Item Form */}
@@ -480,131 +494,140 @@ export default function AddEditPurchasePage() {
                 <p className="text-sm text-red-500">{errors.newItemName}</p>
               )}
             </div>
+            <div className="w-full">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div className="space-y-2">
+                  <Label className="text-sm flex items-center gap-1">
+                    Quantity <span className="text-red-500">*</span>
+                  </Label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      value={newItemQuantity}
+                      onChange={(e) => setNewItemQuantity(e.target.value)}
+                      className={`h-12! rounded-md ${
+                        errors.newItemQuantity ? "border-red-500" : ""
+                      }`}
+                      placeholder="Write QTY"
+                    />
+                    <Select
+                      value={newItemUnit}
+                      onValueChange={(value: "kg" | "gm" | "piece" | "ML") =>
+                        setNewItemUnit(value)
+                      }
+                    >
+                      <SelectTrigger className="h-12! w-24">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="piece">Piece</SelectItem>
+                        <SelectItem value="kg">kg</SelectItem>
+                        <SelectItem value="gm">gm</SelectItem>
+                        <SelectItem value="ML">ML</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  {errors.newItemQuantity && (
+                    <p className="text-sm text-red-500">
+                      {errors.newItemQuantity}
+                    </p>
+                  )}
+                </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="space-y-2">
-                <Label className="text-sm flex items-center gap-1">
-                  Quantity <span className="text-red-500">*</span>
-                </Label>
-                <div className="flex gap-2">
+                <div className="space-y-2">
+                  <Label className="text-sm flex items-center gap-1">
+                    Unit Price <span className="text-red-500">*</span>
+                  </Label>
                   <Input
                     type="number"
-                    value={newItemQuantity}
-                    onChange={(e) => setNewItemQuantity(e.target.value)}
+                    value={newItemUnitPrice}
+                    onChange={(e) => setNewItemUnitPrice(e.target.value)}
                     className={`h-12! rounded-md ${
-                      errors.newItemQuantity ? "border-red-500" : ""
+                      errors.newItemUnitPrice ? "border-red-500" : ""
                     }`}
-                    placeholder="Write QTY"
+                    placeholder="Write per unit price"
                   />
-                  <Select
-                    value={newItemUnit}
-                    onValueChange={(value: "kg" | "gm" | "piece" | "ML") =>
-                      setNewItemUnit(value)
-                    }
-                  >
-                    <SelectTrigger className="h-12! w-24">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="piece">Piece</SelectItem>
-                      <SelectItem value="kg">kg</SelectItem>
-                      <SelectItem value="gm">gm</SelectItem>
-                      <SelectItem value="ML">ML</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  {errors.newItemUnitPrice && (
+                    <p className="text-sm text-red-500">
+                      {errors.newItemUnitPrice}
+                    </p>
+                  )}
                 </div>
-                {errors.newItemQuantity && (
-                  <p className="text-sm text-red-500">
-                    {errors.newItemQuantity}
-                  </p>
-                )}
-              </div>
 
-              <div className="space-y-2">
-                <Label className="text-sm flex items-center gap-1">
-                  Unit Price <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  type="number"
-                  value={newItemUnitPrice}
-                  onChange={(e) => setNewItemUnitPrice(e.target.value)}
-                  className={`h-12! rounded-md ${
-                    errors.newItemUnitPrice ? "border-red-500" : ""
-                  }`}
-                  placeholder="Write per unit price"
-                />
-                {errors.newItemUnitPrice && (
-                  <p className="text-sm text-red-500">
-                    {errors.newItemUnitPrice}
-                  </p>
-                )}
+                <div className="space-y-2">
+                  <Label className="text-sm">Total Price</Label>
+                  <Input
+                    type="text"
+                    value={calculateItemTotal()}
+                    className="h-12! rounded-md"
+                    placeholder="Total price"
+                    readOnly
+                  />
+                </div>
               </div>
-
-              <div className="space-y-2">
-                <Label className="text-sm">Total Price</Label>
-                <Input
-                  type="text"
-                  value={calculateItemTotal()}
-                  className="h-12! rounded-md"
-                  placeholder="Total price"
-                  readOnly
-                />
+              <div className="flex justify-end items-center">
+                <Button
+                  onClick={handleAddItem}
+                  className="flex items-center gap-1 bg-primary hover:bg-primary/80 rounded-md px-4 py-2 text-white"
+                >
+                  {/* <Plus className="w-4 h-4" /> */}
+                  Add Item
+                </Button>
               </div>
             </div>
 
-            {/* Items Table */}
-            {items.length > 0 && (
-              <div className="border border-border rounded-md overflow-hidden">
-                <table className="w-full">
-                  <thead>
-                    <tr className="bg-primary text-primary-foreground">
-                      <th className="text-left p-4 font-semibold">Name</th>
-                      <th className="text-center p-4 font-semibold">
-                        Quantity
-                      </th>
-                      <th className="text-center p-4 font-semibold">
-                        Unit Price
-                      </th>
-                      <th className="text-center p-4 font-semibold">
-                        Total Price
-                      </th>
-                      <th className="text-center p-4 font-semibold">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {items.map((item, index) => (
-                      <tr
-                        key={item.id}
-                        className={`border-b border-border ${
-                          index % 2 === 0 ? "bg-background" : "bg-card"
-                        }`}
-                      >
-                        <td className="p-2">{item.name}</td>
-                        <td className="p-2 text-center">
-                          {item.quantity} {item.unit}
-                        </td>
-                        <td className="p-2 text-center">${item.unitPrice}</td>
-                        <td className="p-2 text-center">${item.totalPrice}</td>
-                        <td className="p-2 text-center">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleRemoveItem(item.id)}
-                            className="hover:bg-red-50 hover:text-red-600"
-                          >
-                            <Trash2 className="h-5 w-5 text-red-400" />
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
             {errors.items && (
               <p className="text-sm text-red-500 mt-2">{errors.items}</p>
             )}
           </div>
+
+          {/* Items Table */}
+          {items.length > 0 && (
+            <div className="border border-border rounded-md overflow-hidden">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-primary text-primary-foreground">
+                    <th className="text-left p-4 font-semibold">Name</th>
+                    <th className="text-center p-4 font-semibold">Quantity</th>
+                    <th className="text-center p-4 font-semibold">
+                      Unit Price
+                    </th>
+                    <th className="text-center p-4 font-semibold">
+                      Total Price
+                    </th>
+                    <th className="text-center p-4 font-semibold">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {items.map((item, index) => (
+                    <tr
+                      key={item.id}
+                      className={`border-b border-border ${
+                        index % 2 === 0 ? "bg-background" : "bg-card"
+                      }`}
+                    >
+                      <td className="p-2">{item.name}</td>
+                      <td className="p-2 text-center">
+                        {item.quantity} {item.unit}
+                      </td>
+                      <td className="p-2 text-center">${item.unitPrice}</td>
+                      <td className="p-2 text-center">${item.totalPrice}</td>
+                      <td className="p-2 text-center">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleRemoveItem(item.id)}
+                          className="bg-red-100 hover:bg-red-200 hover:text-red-600"
+                        >
+                          <Trash2 className="h-5 w-5 text-red-500" />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {/* Payment Details */}
           <div className="bg-card rounded-2xl border border-border shadow-sm p-6">
@@ -613,22 +636,70 @@ export default function AddEditPurchasePage() {
                 <Label className="text-sm flex items-center gap-1">
                   Supplier <span className="text-red-500">*</span>
                 </Label>
-                <Select value={supplier} onValueChange={setSupplier}>
-                  <SelectTrigger
-                    className={`h-12! w-full ${
-                      errors.supplier ? "border-red-500" : ""
-                    }`}
-                  >
-                    <SelectValue placeholder="Supplier name" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {mockSupplierOptions.map((option) => (
-                      <SelectItem key={option} value={option}>
-                        {option}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Popover open={supplierOpen} onOpenChange={setSupplierOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={supplierOpen}
+                      className={`h-12 w-full justify-between bg-card shadow-none font-normal ${
+                        errors.supplier ? "border-red-500" : ""
+                      }`}
+                    >
+                      {supplier || "Select or type supplier..."}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="p-0" align="start" side="bottom">
+                    <Command>
+                      <CommandInput
+                        placeholder="Search or type supplier..."
+                        value={supplier}
+                        onValueChange={setSupplier}
+                      />
+                      <CommandList>
+                        <CommandEmpty>
+                          <div className="py-6 text-center text-sm">
+                            Press Enter to add:{" "}
+                            <strong className="text-primary">{supplier}</strong>
+                          </div>
+                        </CommandEmpty>
+                        <CommandGroup>
+                          {mockSupplierOptions
+                            .filter((option) =>
+                              option
+                                .toLowerCase()
+                                .includes(supplier.toLowerCase())
+                            )
+                            .map((option) => (
+                              <CommandItem
+                                key={option}
+                                value={option}
+                                onSelect={(currentValue) => {
+                                  setSupplier(currentValue);
+                                  setSupplierOpen(false);
+                                  setErrors((prev) => ({
+                                    ...prev,
+                                    supplier: undefined,
+                                  }));
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    supplier === option
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                                {option}
+                              </CommandItem>
+                            ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
                 {errors.supplier && (
                   <p className="text-sm text-red-500">{errors.supplier}</p>
                 )}

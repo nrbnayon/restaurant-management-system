@@ -565,7 +565,7 @@ export default function CategoryPage() {
           ((viewMode === "category" && paginatedCategories.length > 0) ||
             (viewMode === "subCategory" &&
               paginatedSubCategories.length > 0)) && (
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-end gap-4">
               <Button
                 variant="outline"
                 className="rounded-md bg-card shadow-sm"

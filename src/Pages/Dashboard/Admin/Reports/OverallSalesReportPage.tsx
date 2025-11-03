@@ -419,7 +419,7 @@ export default function OverallSalesReportPage() {
             </h2>
             <Button
               onClick={handlePrint}
-              className="bg-primary hover:bg-primary/80 text-white rounded-sm px-4 py-2 flex items-center gap-4"
+              className="bg-primary hover:bg-primary/80 text-white rounded-sm px-4 py-2 flex items-center gap-2"
             >
               <Printer className="w-5 h-5" />
               Print
