@@ -1,24 +1,30 @@
-// KITCHEN ORDER CARD - src/components/Kitchen/KitchenOrderCard.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Eye } from "lucide-react";
-import type { Order, OrderStatus } from "@/types/order";
+import { Eye, ChevronDown, ChevronUp } from "lucide-react";
+import type { Order, OrderStatus, OrderItem } from "@/types/order";
 import { RoleGuard } from "../RoleGuard";
+import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
 
 interface KitchenOrderCardProps {
   order: Order;
   currentStatus: OrderStatus;
-  onStatusChange: (orderId: string, newStatus: OrderStatus) => void;
+  onItemStatusChange: (
+    orderId: string,
+    itemId: string,
+    newStatus: OrderStatus
+  ) => void;
 }
 
 export default function KitchenOrderCard({
   order,
   currentStatus,
-  onStatusChange,
+  onItemStatusChange,
 }: KitchenOrderCardProps) {
   const navigate = useNavigate();
-  const [isUpdating, setIsUpdating] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [updatingItemId, setUpdatingItemId] = useState<string | null>(null);
 
   const getStatusColor = (status: OrderStatus) => {
     switch (status) {
@@ -35,6 +41,21 @@ export default function KitchenOrderCard({
     }
   };
 
+  const getStatusTextColor = (status: OrderStatus) => {
+    switch (status) {
+      case "Receive":
+        return "text-[#2294C5]";
+      case "Preparing":
+        return "text-[#B8860B]";
+      case "Ready":
+        return "text-[#22C55E]";
+      case "Served":
+        return "text-[#00A789]";
+      default:
+        return "text-primary";
+    }
+  };
+
   const getNextStatus = (currentStatus: OrderStatus): OrderStatus | null => {
     const statusFlow: Record<OrderStatus, OrderStatus | null> = {
       Receive: "Preparing",
@@ -45,21 +66,39 @@ export default function KitchenOrderCard({
     return statusFlow[currentStatus];
   };
 
-  const handleStatusUpdate = async () => {
-    const nextStatus = getNextStatus(currentStatus);
+  // Calculate progress percentage
+  const calculateProgress = () => {
+    const totalItems = order.items.length;
+    const statusWeights = {
+      Receive: 0,
+      Preparing: 33.33,
+      Ready: 66.66,
+      Served: 100,
+    };
+
+    const totalProgress = order.items.reduce(
+      (sum, item) => sum + statusWeights[item.status],
+      0
+    );
+
+    return Math.round(totalProgress / totalItems);
+  };
+
+  const progress = calculateProgress();
+
+  const handleItemStatusUpdate = async (item: OrderItem) => {
+    const nextStatus = getNextStatus(item.status);
     if (!nextStatus) return;
 
-    setIsUpdating(true);
+    setUpdatingItemId(item.id);
     await new Promise((resolve) => setTimeout(resolve, 500));
-    onStatusChange(order.id, nextStatus);
-    setIsUpdating(false);
+    onItemStatusChange(order.id, item.id, nextStatus);
+    setUpdatingItemId(null);
   };
 
   const handleViewDetails = () => {
     navigate(`/dashboard/orders/${order.id}`);
   };
-
-  const nextStatus = getNextStatus(currentStatus);
 
   return (
     <div className="bg-card rounded-2xl border border-border shadow-md overflow-hidden hover:shadow-lg transition-shadow">
@@ -75,55 +114,208 @@ export default function KitchenOrderCard({
 
       {/* Card Body */}
       <div className="p-4 space-y-3">
+        {/* Progress Bar Section - Only for Chef */}
+        <RoleGuard allowedRoles={["chef"]}>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-sm">
+              <span className="font-semibold text-foreground">Progress</span>
+              <span className="font-bold text-primary">{progress}%</span>
+            </div>
+            <Progress value={progress} className="h-2" />
+          </div>
+        </RoleGuard>
+
+        {/* Admin Progress View - Read Only */}
+        <RoleGuard allowedRoles={["admin"]}>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-sm">
+              <span className="font-semibold text-foreground">Progress</span>
+              <span className="font-bold text-primary">{progress}%</span>
+            </div>
+            <Progress value={progress} className="h-2" />
+            <p className="text-xs text-muted-foreground italic">
+              View only - Chef controls order progress
+            </p>
+          </div>
+        </RoleGuard>
+
         {/* Table Number */}
         <div className="text-sm">
           <span className="font-semibold text-foreground">Table No: </span>
           <span className="text-foreground">{order.tableNo}</span>
         </div>
 
-        {/* Order Items */}
-        <div className="space-y-1">
-          {order.items.map((item, index) => (
-            <div
-              key={`${item.id}-${index}`}
-              className="text-sm text-foreground"
+        {/* Order Items Summary */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-semibold text-foreground">
+              Items ({order.items.length})
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="h-6 px-2 hover:bg-accent"
             >
-              <span className="font-medium">{item.quantity}</span> * {item.name}
+              {isExpanded ? (
+                <ChevronUp className="h-4 w-4" />
+              ) : (
+                <ChevronDown className="h-4 w-4" />
+              )}
+            </Button>
+          </div>
+
+          {!isExpanded && (
+            <div className="space-y-1">
+              {order.items.slice(0, 2).map((item, index) => (
+                <div
+                  key={`${item.id}-${index}`}
+                  className="text-sm text-foreground flex items-center justify-between"
+                >
+                  <span>
+                    <span className="font-medium">{item.quantity}</span> *{" "}
+                    {item.name}
+                  </span>
+                  <span
+                    className={cn(
+                      "text-xs font-semibold",
+                      getStatusTextColor(item.status)
+                    )}
+                  >
+                    {item.status}
+                  </span>
+                </div>
+              ))}
+              {order.items.length > 2 && (
+                <p className="text-xs text-muted-foreground">
+                  +{order.items.length - 2} more items
+                </p>
+              )}
             </div>
-          ))}
+          )}
+
+          {/* Expanded Items View - Chef Only */}
+          {isExpanded && (
+            <RoleGuard allowedRoles={["chef"]}>
+              <div className="space-y-3 pt-2">
+                {order.items.map((item, index) => {
+                  const nextStatus = getNextStatus(item.status);
+                  const isUpdating = updatingItemId === item.id;
+
+                  return (
+                    <div
+                      key={`${item.id}-${index}`}
+                      className="p-3 bg-accent/30 rounded-lg space-y-2"
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-foreground">
+                            <span className="font-semibold">
+                              {item.quantity}
+                            </span>{" "}
+                            * {item.name}
+                          </p>
+                          {item.size && (
+                            <p className="text-xs text-muted-foreground">
+                              Size: {item.size}
+                            </p>
+                          )}
+                          {item.note && (
+                            <p className="text-xs text-muted-foreground">
+                              Note: {item.note}
+                            </p>
+                          )}
+                        </div>
+                        <span
+                          className={cn(
+                            "text-xs font-semibold px-2 py-1 rounded",
+                            getStatusTextColor(item.status)
+                          )}
+                        >
+                          {item.status}
+                        </span>
+                      </div>
+
+                      {nextStatus && (
+                        <Button
+                          onClick={() => handleItemStatusUpdate(item)}
+                          disabled={isUpdating}
+                          className={`w-full ${getStatusColor(
+                            nextStatus
+                          )} hover:opacity-90 text-white h-8 text-xs`}
+                        >
+                          {isUpdating ? "Updating..." : `Mark as ${nextStatus}`}
+                        </Button>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </RoleGuard>
+          )}
+
+          {/* Expanded Items View - Admin (Read Only) */}
+          {isExpanded && (
+            <RoleGuard allowedRoles={["admin"]}>
+              <div className="space-y-2 pt-2">
+                {order.items.map((item, index) => (
+                  <div
+                    key={`${item.id}-${index}`}
+                    className="p-3 bg-accent/30 rounded-lg"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-foreground">
+                          <span className="font-semibold">{item.quantity}</span>{" "}
+                          * {item.name}
+                        </p>
+                        {item.size && (
+                          <p className="text-xs text-muted-foreground">
+                            Size: {item.size}
+                          </p>
+                        )}
+                        {item.note && (
+                          <p className="text-xs text-muted-foreground">
+                            Note: {item.note}
+                          </p>
+                        )}
+                      </div>
+                      <span
+                        className={cn(
+                          "text-xs font-semibold px-2 py-1 rounded",
+                          getStatusTextColor(item.status)
+                        )}
+                      >
+                        {item.status}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </RoleGuard>
+          )}
         </div>
 
         {/* Time Left */}
-        <div className="text-right">
-          <span className="text-sm text-muted-foreground">
-            {order.timeLeft}
-          </span>
+        <div className="flex justify-between items-center ">
+          <RoleGuard allowedRoles={["admin", "chef"]}>
+            <div className="flex gap-2 pt-2">
+              <Button
+                variant="outline"
+                onClick={handleViewDetails}
+                className="flex-1 hover:bg-accent h-8 text-sm"
+              >
+                <Eye className="h-4 w-4 text-foreground" />
+                View Details
+              </Button>
+            </div>
+          </RoleGuard>
+          <p className="text-sm font-semibold text-muted-foreground">
+            Time Left: {order.timeLeft}
+          </p>
         </div>
 
-        <RoleGuard allowedRoles={[""]} canTrigger={[""]}>
-          {/* Actions */}
-          <div className="flex gap-2 pt-2">
-            {nextStatus && (
-              <Button
-                onClick={handleStatusUpdate}
-                disabled={isUpdating}
-                className={`flex-1 ${getStatusColor(
-                  nextStatus
-                )} hover:opacity-90 text-white h-9 text-sm`}
-              >
-                {isUpdating ? "Updating..." : `Mark as ${nextStatus}`}
-              </Button>
-            )}
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={handleViewDetails}
-              className="hover:bg-accent h-9 w-9"
-            >
-              <Eye className="h-4 w-4 text-foreground" />
-            </Button>
-          </div>
-        </RoleGuard>
+        {/* Actions */}
       </div>
     </div>
   );

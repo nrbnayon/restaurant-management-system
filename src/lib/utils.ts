@@ -8,20 +8,19 @@ export function cn(...inputs: ClassValue[]) {
 export const getStatusColor = (status: string) => {
   switch (status.toLowerCase()) {
     case "receive":
-      return "bg-[#2294C5] hover:bg-[#28a5dd]/90 text-white flex items-center justify-center rounded-full";
+      return "bg-blue-100 hover:bg-blue-200 text-center text-blue-800 border border-blue-200";
     case "ready":
-      return "bg-[#22C55E] hover:bg-[#22c55e]/90 text-white flex items-center justify-center rounded-full";
+      return "bg-green-100 hover:bg-green-200 text-green-800 border border-green-200";
     case "preparing":
-      return "bg-[#B8860B] hover:bg-[#d4a12e]/90 text-white flex items-center justify-center rounded-full";
+      return "bg-amber-100 hover:bg-amber-200 text-amber-800 border border-amber-200";
     case "served":
-      return "bg-[#00A789] hover:bg-[#00A789]/90 text-white flex items-center justify-center rounded-full";
+      return "bg-teal-100 hover:bg-teal-200 text-teal-800 border border-teal-200";
     case "pending":
-      return "bg-[#A0B238] hover:bg-[#A0B238]/90 text-white flex items-center justify-center rounded-full";
+      return "bg-lime-100 hover:bg-lime-200 text-lime-800 border border-lime-200";
     default:
-      return "bg-muted hover:bg-muted/90";
+      return "bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-200";
   }
 };
-
 
 export const formatDate = (dateString: string): string => {
   const date = new Date(dateString);

@@ -1,8 +1,7 @@
-// KITCHEN PAGE - src/Pages/Dashboard/Admin/Kitchen/KitchenPage.tsx
 import { useState, useMemo, useEffect } from "react";
 import DashboardHeader from "@/components/Dashboard/DashboardHeader";
 import { mockOrders } from "@/data/mockOrders";
-import type { Order, OrderStatus } from "@/types/order";
+import type { Order, OrderStatus, OrderItem } from "@/types/order";
 import { toast } from "sonner";
 import { KitchenColumn } from "@/components/Kitchen/KitchenColumn";
 
@@ -19,22 +18,54 @@ export default function KitchenPage() {
     loadData();
   }, []);
 
+  // Calculate order status based on all items
+  const calculateOrderStatus = (items: OrderItem[]): OrderStatus => {
+    if (items.every((item) => item.status === "Served")) return "Served";
+    if (items.every((item) => item.status === "Ready")) return "Ready";
+    if (items.some((item) => item.status === "Preparing")) return "Preparing";
+    return "Receive";
+  };
+
+  // Group orders by their calculated status
   const groupedOrders = useMemo(() => {
+    const ordersWithCalculatedStatus = orders.map((order) => ({
+      ...order,
+      status: calculateOrderStatus(order.items),
+    }));
+
     return {
-      received: orders.filter((o) => o.status === "Receive"),
-      preparing: orders.filter((o) => o.status === "Preparing"),
-      ready: orders.filter((o) => o.status === "Ready"),
-      served: orders.filter((o) => o.status === "Served"),
+      received: ordersWithCalculatedStatus.filter(
+        (o) => o.status === "Receive"
+      ),
+      preparing: ordersWithCalculatedStatus.filter(
+        (o) => o.status === "Preparing"
+      ),
+      ready: ordersWithCalculatedStatus.filter((o) => o.status === "Ready"),
+      served: ordersWithCalculatedStatus.filter((o) => o.status === "Served"),
     };
   }, [orders]);
 
-  const handleStatusChange = (orderId: string, newStatus: OrderStatus) => {
+  const handleItemStatusChange = (
+    orderId: string,
+    itemId: string,
+    newStatus: OrderStatus
+  ) => {
     setOrders((prev) =>
-      prev.map((order) =>
-        order.id === orderId ? { ...order, status: newStatus } : order
-      )
+      prev.map((order) => {
+        if (order.id === orderId) {
+          const updatedItems = order.items.map((item) =>
+            item.id === itemId ? { ...item, status: newStatus } : item
+          );
+          return {
+            ...order,
+            items: updatedItems,
+            status: calculateOrderStatus(updatedItems),
+          };
+        }
+        return order;
+      })
     );
-    toast.success("Order status updated successfully");
+    toast.success("Item status updated successfully");
   };
 
   return (
@@ -50,7 +81,7 @@ export default function KitchenPage() {
             status="Receive"
             bgColor="bg-[#2294C5]"
             isLoading={isLoading}
-            onStatusChange={handleStatusChange}
+            onItemStatusChange={handleItemStatusChange}
           />
 
           {/* Preparing Orders Column */}
@@ -60,7 +91,7 @@ export default function KitchenPage() {
             status="Preparing"
             bgColor="bg-[#B8860B]"
             isLoading={isLoading}
-            onStatusChange={handleStatusChange}
+            onItemStatusChange={handleItemStatusChange}
           />
 
           {/* Ready Column */}
@@ -70,7 +101,7 @@ export default function KitchenPage() {
             status="Ready"
             bgColor="bg-[#22C55E]"
             isLoading={isLoading}
-            onStatusChange={handleStatusChange}
+            onItemStatusChange={handleItemStatusChange}
           />
 
           {/* Served Column */}
@@ -80,7 +111,7 @@ export default function KitchenPage() {
             status="Served"
             bgColor="bg-[#00A789]"
             isLoading={isLoading}
-            onStatusChange={handleStatusChange}
+            onItemStatusChange={handleItemStatusChange}
           />
         </div>
       </main>

@@ -70,7 +70,7 @@ export const sidebarConfig: Record<string, SidebarSection[]> = {
           label: "Kitchen",
           icon: <ChefHat className="h-5 w-5" />,
           path: "/dashboard/kitchen",
-          roles: ["admin"],
+          roles: ["admin", "chef"],
         },
         {
           id: "table",
@@ -295,6 +295,13 @@ export const sidebarConfig: Record<string, SidebarSection[]> = {
           icon: <ShoppingBag className="h-5 w-5" />,
           path: "/dashboard/orders",
           roles: ["chef"],
+        },
+        {
+          id: "kitchen",
+          label: "Kitchen",
+          icon: <ChefHat className="h-5 w-5" />,
+          path: "/dashboard/kitchen",
+          roles: ["admin", "chef"],
         },
         {
           id: "notification",

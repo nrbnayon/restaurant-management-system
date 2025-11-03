@@ -242,10 +242,10 @@ export default function OrdersPage({
                             }
                           >
                             <SelectTrigger
-                              className={`w-32 border-0 ${getStatusColor(
+                              className={`w-28 border-0 ${getStatusColor(
                                 selectedStatus[order.id] || order.status
                               )}`}
-                              iconClassName="text-white"
+                              iconClassName="text-dark"
                             >
                               <SelectValue />
                             </SelectTrigger>

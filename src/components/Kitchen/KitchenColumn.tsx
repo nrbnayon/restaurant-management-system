@@ -1,4 +1,3 @@
-// KITCHEN COLUMN COMPONENT - src/components/Kitchen/KitchenColumn.tsx
 import { KitchenColumnSkeleton } from "@/components/Skeleton/KitchenSkeleton";
 import type { Order, OrderStatus } from "@/types/order";
 import KitchenOrderCard from "./KitchenOrderCard";
@@ -9,7 +8,11 @@ interface KitchenColumnProps {
   status: OrderStatus;
   bgColor: string;
   isLoading: boolean;
-  onStatusChange: (orderId: string, newStatus: OrderStatus) => void;
+  onItemStatusChange: (
+    orderId: string,
+    itemId: string,
+    newStatus: OrderStatus
+  ) => void;
 }
 
 export function KitchenColumn({
@@ -18,7 +21,7 @@ export function KitchenColumn({
   status,
   bgColor,
   isLoading,
-  onStatusChange,
+  onItemStatusChange,
 }: KitchenColumnProps) {
   return (
     <div className="space-y-4">
@@ -43,7 +46,7 @@ export function KitchenColumn({
               key={order.id}
               order={order}
               currentStatus={status}
-              onStatusChange={onStatusChange}
+              onItemStatusChange={onItemStatusChange}
             />
           ))
         )}
